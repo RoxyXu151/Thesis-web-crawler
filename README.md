@@ -1,129 +1,137 @@
-# 学术论文网站爬虫工具
+# Academic Paper Web Crawlers
 
-## 项目介绍
+**English** | [简体中文](README.zh-CN.md)
 
-本项目是一个针对主要学术论文网站的爬虫工具集合，用于自动化获取学术论文的元数据信息，包括标题、作者、摘要、关键词、DOI、发表日期、发表期刊等。该工具支持多个主流学术网站，并提供数据整合和引用次数获取功能。
+## Overview
 
-**注意：本项目仅作技术讨论和学习使用，推荐使用官方API进行数据获取：**
+A collection of Python crawlers for major academic publishing websites. The scripts collect paper metadata, including titles, authors, abstracts, keywords, DOIs, publication dates, and journal names. The project also includes tools for integrating data from multiple sources and retrieving citation counts.
 
-1. [Scopus preview - Scopus - 欢迎使用 Scopus](https://www.scopus.com/home.uri)
-2. [api.scopus.com/doc-details/documents/2-s2.0-85048982194](https://api.scopus.com/doc-details/documents/2-s2.0-85048982194)
+**This project is intended for technical discussion and learning. Official APIs are recommended for data retrieval:**
 
-## 功能特点
+1. [Scopus Preview](https://www.scopus.com/home.uri)
+2. [Scopus API document example](https://api.scopus.com/doc-details/documents/2-s2.0-85048982194)
 
-- **多网站支持**：支持IEEE、ScienceDirect、Informs、Taylor & Francis Online、Ceramics等主要学术网站
-- **多线程爬取**：部分爬虫提供多线程版本，提高爬取效率
-- **数据整合**：将不同来源的数据整合到统一格式
-- **引用次数获取**：通过CrossRef API获取论文被引用次数
-- **断点续爬**：支持从上次爬取位置继续爬取
+## Features
 
-## 安装要求
+- **Multiple publishers**: IEEE, ScienceDirect, INFORMS, Taylor & Francis Online, and Ceramics.
+- **Multithreaded crawling**: Threaded variants are available for several crawlers.
+- **Data integration**: Combine metadata from different sources into a consistent format.
+- **Citation counts**: Retrieve citation counts through the Crossref API.
+- **Resume support**: Use existing output to locate the previous crawling position.
 
-### 环境要求
+## Requirements and installation
 
-- Python 3.6+
-- Chrome浏览器（用于Selenium爬取）
-- ChromeDriver（与Chrome浏览器版本匹配）
+### Environment
 
-### 依赖库
+- Python 3.6 or later; choose dependency versions compatible with your Python version.
+- Chrome for Selenium-based crawling.
+- ChromeDriver compatible with your Chrome version.
+
+### Dependencies
 
 ```bash
-pip install pandas selenium lxml requests concurrent.futures
+pip install pandas selenium lxml requests
 ```
 
-## 项目结构
+`concurrent.futures` is part of Python's standard library and does not require a separate installation.
 
-```
+## Project structure
+
+```text
 Thesis-web-crawler/
-├── crawler_code/             # 爬虫代码目录
-│   ├── func.py               # 通用函数
-│   ├── ieee.py               # IEEE网站爬虫
-│   ├── ieee-muti.py          # IEEE网站多线程爬虫
-│   ├── sciencedirect.py      # ScienceDirect网站爬虫
-│   ├── scicedirect_muti.py   # ScienceDirect网站多线程爬虫
-│   ├── informs.py            # Informs网站爬虫
-│   ├── informs-muti.py       # Informs网站多线程爬虫
-│   ├── tandfonline.py        # Taylor & Francis Online网站爬虫
-│   ├── tandfonline-muti.py   # Taylor & Francis Online网站多线程爬虫
-│   ├── ceramics.py           # Ceramics网站爬虫
-│   └── ceramics-m.py         # Ceramics网站多线程爬虫
-├── data_integration.py       # 数据整合脚本
-├── 获取被引次数.py            # 获取论文引用次数脚本
-├── note.md                   # 项目注意事项
-└── README.md                 # 项目说明文档
+├── crawler_code/             # Crawler scripts
+│   ├── func.py               # Shared helpers
+│   ├── ieee.py               # IEEE crawler
+│   ├── ieee-muti.py          # Multithreaded IEEE crawler
+│   ├── sciencedirect.py      # ScienceDirect crawler
+│   ├── scicedirect_muti.py   # Multithreaded ScienceDirect crawler
+│   ├── informs.py            # INFORMS crawler
+│   ├── informs-muti.py       # Multithreaded INFORMS crawler
+│   ├── tandfonline.py        # Taylor & Francis Online crawler
+│   ├── tandfonline-muti.py   # Multithreaded Taylor & Francis Online crawler
+│   ├── ceramics.py           # Ceramics crawler
+│   └── ceramics-m.py         # Multithreaded Ceramics crawler
+├── data_integration.py       # Data integration
+├── 获取被引次数.py             # Citation count retrieval
+├── note.md                   # Usage notes in English
+├── note.zh-CN.md             # Usage notes in Simplified Chinese
+├── README.md                 # English documentation (default)
+└── README.zh-CN.md           # Simplified Chinese documentation
 ```
 
-## 使用方法
+Script filenames are unchanged; use the exact names shown above when running commands.
 
-### 1. 爬取论文数据
+## Usage
 
-各爬虫脚本位于`crawler_code`目录下，可以根据需要选择对应网站的爬虫：
+### 1. Crawl paper metadata
+
+Choose the appropriate script from `crawler_code/`:
 
 ```bash
-# 运行IEEE爬虫
+# Run the IEEE crawler
 python crawler_code/ieee.py
 
-# 运行多线程版本
+# Run its multithreaded variant
 python crawler_code/ieee-muti.py
 ```
 
-**注意**：使用前需要在脚本中配置相应的登录信息（如有需要）。
+Before running a crawler, configure the input and output paths, target links, resume index files, and any required login details in the script. Paths are relative to the current working directory. See the [usage notes](note.md) for additional configuration details.
 
-### 2. 数据整合
-
-使用`data_integration.py`脚本整合不同来源的数据：
+### 2. Integrate data
 
 ```bash
 python data_integration.py
 ```
 
-该脚本会读取各网站爬取的数据，并根据URL来源进行整合，最终生成按月份分类的整合数据文件。
+This script reads metadata collected from different publishers, selects records based on their source URLs, and writes integrated CSV files by month. Configure its input and output paths before running it.
 
-### 3. 获取引用次数
-
-使用`获取被引次数.py`脚本获取论文的引用次数：
+### 3. Retrieve citation counts
 
 ```bash
 python 获取被引次数.py
 ```
 
-该脚本通过CrossRef API获取DOI对应的引用次数，并更新到数据文件中。
+This script queries Crossref for citation counts by DOI and updates the data files. By default, it reads `updated_file.csv`, periodically writes `updated_file1.csv`, and saves the final results to `updated_file_final.csv`. Adjust these paths in the script as needed.
 
-## 各模块说明
+## Modules
 
-### 爬虫模块
+### Crawlers
 
-- **func.py**：提供通用函数，如获取上次爬取位置
-- **ieee.py/ieee-muti.py**：IEEE网站爬虫，获取论文标题、作者、摘要、关键词、DOI等信息
-- **sciencedirect.py/scicedirect_muti.py**：ScienceDirect网站爬虫
-- **informs.py/informs-muti.py**：Informs网站爬虫
-- **tandfonline.py/tandfonline-muti.py**：Taylor & Francis Online网站爬虫
-- **ceramics.py/ceramics-m.py**：Ceramics网站爬虫
+- **func.py**: Shared helpers, including locating the previous crawling position.
+- **ieee.py / ieee-muti.py**: Collect titles, authors, abstracts, keywords, DOIs, and other metadata from IEEE.
+- **sciencedirect.py / scicedirect_muti.py**: ScienceDirect crawlers.
+- **informs.py / informs-muti.py**: INFORMS crawlers.
+- **tandfonline.py / tandfonline-muti.py**: Taylor & Francis Online crawlers.
+- **ceramics.py / ceramics-m.py**: Ceramics crawlers.
 
-### 数据处理模块
+### Data processing
 
-- **data_integration.py**：整合不同来源的数据，统一数据格式
-- **获取被引次数.py**：通过CrossRef API获取论文引用次数
+- **data_integration.py**: Combine data from different sources into a consistent format.
+- **获取被引次数.py**: Retrieve citation counts through the Crossref API.
 
-## 注意事项
+## Usage considerations
 
-1. 爬虫使用前需要确保已安装Chrome浏览器和对应版本的ChromeDriver
-2. 部分网站需要登录才能访问完整内容，请在脚本中配置相应的登录信息
-3. 爬取速度过快可能会触发网站的反爬机制，建议适当调整爬取间隔
-4. 建议使用官方提供的API接口获取数据，本项目仅作技术学习和讨论使用
-5. 使用多线程版本可以提高爬取效率，但也会增加被网站检测的风险
-6. 数据整合前确保各网站的数据已爬取完成并保存在正确的路径下
-7. 注意index文件输出，读取文件和输出文件要一样，getLast路径和链接需要正确配置
+1. Install Chrome and a compatible ChromeDriver before using the crawlers.
+2. Some websites require login to access full content; configure the required login details in the scripts.
+3. Crawling too quickly may trigger a website's anti-bot mechanisms. Adjust the request intervals as appropriate.
+4. Prefer official APIs for data retrieval. This project is intended for technical learning and discussion.
+5. Multithreading can improve throughput but may also increase the likelihood of being detected by a website.
+6. Complete the crawling steps and save each publisher's data to the configured paths before integration.
+7. Keep the resume index file's read and write paths consistent, and configure the paths and URL prefixes passed to `getLast` correctly. See [usage notes](note.md).
 
-## 贡献与改进
+## Contributing
 
-欢迎提出建议和改进意见，可以通过以下方式贡献：
+Suggestions and improvements are welcome:
 
-1. 添加对更多学术网站的支持
-2. 优化爬虫性能和稳定性
-3. 改进数据处理和整合逻辑
-4. 增加更多数据分析功能
+1. Add support for more academic websites.
+2. Improve crawler performance and stability.
+3. Improve data processing and integration.
+4. Add data analysis features.
 
-## 免责声明
+## Disclaimer
 
-本项目仅供学术研究和技术学习使用，请遵守相关网站的使用条款和规定。使用本工具产生的任何法律责任由使用者自行承担。推荐使用官方提供的API接口获取数据。
+This project is intended for academic research and technical learning. Follow the terms and rules of the websites you access. Users are responsible for any legal consequences arising from their use of these tools. Official APIs are recommended for data retrieval.
+
+## License
+
+[MIT License](LICENSE).

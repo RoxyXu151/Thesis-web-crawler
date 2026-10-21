@@ -1,7 +1,23 @@
-注意：index文件输出，读取文件和输出文件要一样，getLast路径和链接,index文件名
-            print(f"m{month}:{index}")
+# Usage notes
 
-ieee校园网访问较慢
-sci校园网访问最快
+**English** | [简体中文](note.zh-CN.md)
 
-建议使用官方接口进行下载
+## Resume configuration
+
+Keep the resume index file's read and write paths and filenames consistent. Configure the data paths and URL prefixes passed to `getLast` correctly.
+
+Some scripts print a month and index to help record progress:
+
+```python
+print(f"m{month}:{index}")
+```
+
+## Campus network observations
+
+The original author's notes recorded slower IEEE access and the fastest ScienceDirect access on their campus network. These are observations from that environment; speeds may differ on other networks.
+
+## Data access
+
+Official APIs are recommended for retrieving or downloading data.
+
+See the [project README](README.md) for installation and usage.
